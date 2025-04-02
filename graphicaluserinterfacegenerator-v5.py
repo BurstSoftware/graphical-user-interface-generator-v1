@@ -33,7 +33,6 @@ frameworks = {
 
 # Framework info with descriptions and documentation links
 framework_info = {
-    # Web Development
     "Django": {"desc": "High-level web framework for rapid development.", "doc": "https://docs.djangoproject.com/"},
     "Flask": {"desc": "Lightweight microframework for web apps.", "doc": "https://flask.palletsprojects.com/"},
     "FastAPI": {"desc": "High-performance API framework with async support.", "doc": "https://fastapi.tiangolo.com/"},
@@ -47,7 +46,6 @@ framework_info = {
     "Masonite": {"desc": "Modern web framework with Laravel-like syntax.", "doc": "https://docs.masoniteproject.com/"},
     "Dash": {"desc": "Framework for analytical web apps (built on Flask).", "doc": "https://dash.plotly.com/"},
     "Streamlit": {"desc": "Framework for data-driven web apps.", "doc": "https://docs.streamlit.io/"},
-    # GUI
     "Tkinter": {"desc": "Standard Python GUI toolkit.", "doc": "https://docs.python.org/3/library/tkinter.html"},
     "PyQt": {"desc": "Python bindings for Qt (cross-platform GUI).", "doc": "https://www.riverbankcomputing.com/static/Docs/PyQt6/"},
     "PySide": {"desc": "Official Python bindings for Qt.", "doc": "https://doc.qt.io/qtforpython-6/"},
@@ -57,7 +55,6 @@ framework_info = {
     "Dear PyGui": {"desc": "Fast, GPU-accelerated GUI framework.", "doc": "https://dearpygui.readthedocs.io/en/latest/"},
     "Toga": {"desc": "Cross-platform GUI toolkit (BeeWare project).", "doc": "https://toga.readthedocs.io/en/latest/"},
     "Eel": {"desc": "Framework for GUI apps with web technologies.", "doc": "https://github.com/ChrisKnott/Eel#documentation"},
-    # Machine Learning/Data Science
     "TensorFlow": {"desc": "Framework for machine learning.", "doc": "https://www.tensorflow.org/api_docs"},
     "PyTorch": {"desc": "Flexible deep learning framework.", "doc": "https://pytorch.org/docs/stable/index.html"},
     "Scikit-learn": {"desc": "ML library for classical algorithms.", "doc": "https://scikit-learn.org/stable/documentation.html"},
@@ -68,24 +65,20 @@ framework_info = {
     "Pandas": {"desc": "Data manipulation and analysis framework.", "doc": "https://pandas.pydata.org/docs/"},
     "NumPy": {"desc": "Fundamental framework for numerical computing.", "doc": "https://numpy.org/doc/stable/"},
     "SciPy": {"desc": "Framework for scientific computing.", "doc": "https://docs.scipy.org/doc/scipy/"},
-    # Testing
     "Pytest": {"desc": "Powerful testing framework with plugins.", "doc": "https://docs.pytest.org/en/stable/"},
     "Unittest": {"desc": "Built-in Python testing framework.", "doc": "https://docs.python.org/3/library/unittest.html"},
     "Nose2": {"desc": "Successor to Nose testing framework.", "doc": "https://docs.nose2.io/en/latest/"},
     "Robot Framework": {"desc": "Keyword-driven test automation.", "doc": "https://robotframework.org/#documentation"},
     "Behave": {"desc": "Behavior-driven development framework.", "doc": "https://behave.readthedocs.io/en/stable/"},
     "Hypothesis": {"desc": "Property-based testing framework.", "doc": "https://hypothesis.readthedocs.io/en/latest/"},
-    # Networking/Asynchronous
     "Twisted": {"desc": "Event-driven networking framework.", "doc": "https://twistedmatrix.com/trac/wiki/Documentation"},
     "AIOHTTP": {"desc": "Async HTTP client/server framework.", "doc": "https://docs.aiohttp.org/en/stable/"},
     "Gevent": {"desc": "Coroutine-based concurrent networking.", "doc": "https://www.gevent.org/"},
     "Eventlet": {"desc": "Asynchronous framework for networking.", "doc": "https://eventlet.net/doc/"},
-    # Game Development
     "Pygame": {"desc": "Framework for 2D games and multimedia.", "doc": "https://www.pygame.org/docs/"},
     "Arcade": {"desc": "Modern Python framework for 2D games.", "doc": "https://api.arcade.academy/en/stable/"},
     "Pyglet": {"desc": "Lightweight framework for games.", "doc": "https://pyglet.readthedocs.io/en/latest/"},
     "Panda3D": {"desc": "3D game development framework.", "doc": "https://docs.panda3d.org/"},
-    # Other
     "SQLAlchemy": {"desc": "ORM framework for database interactions.", "doc": "https://docs.sqlalchemy.org/en/20/"},
     "Flask-RESTful": {"desc": "Extension of Flask for REST APIs.", "doc": "https://flask-restful.readthedocs.io/en/latest/"},
     "Celery": {"desc": "Distributed task queue framework.", "doc": "https://docs.celeryproject.org/en/stable/"},
@@ -97,7 +90,7 @@ framework_info = {
     "Seaborn": {"desc": "Statistical visualization framework.", "doc": "https://seaborn.pydata.org/"}
 }
 
-# Framework compatibility (example conflicts)
+# Framework compatibility
 incompatible_pairs = {
     ("Streamlit", "Django"): "Streamlit and Django are both web frameworks and typically not used together.",
     ("TensorFlow", "Tkinter"): "TensorFlow (ML) and Tkinter (GUI) serve different purposes and may not integrate directly."
@@ -152,71 +145,76 @@ if example_choice != "None" and st.button("Apply Example"):
     st.session_state["section_names"] = example["sections"]
     st.success(f"Applied '{example_choice}' example!")
 
-# Number of sections (with session state for example use cases)
+# Number of sections
 num_sections = st.number_input("Number of Application Sections", min_value=1, max_value=20, value=st.session_state.get("num_sections", 1))
 
 # Graphical Layout Designer
 st.subheader("Design Your Layout")
-layout_html = """
-<div id="layout-container" style="width: 500px; height: 300px; border: 1px solid #ccc; position: relative;">
-    <div class="draggable" style="position: absolute; width: 100px; height: 50px; background: #e0e0e0; cursor: move;"></div>
+layout_html = f"""
+<div id="layout-container" style="width: 500px; height: 300px; border: 1px solid #ccc; position: relative; background: #f9f9f9;">
+    {"".join([f'<div class="draggable" data-id="{i}" style="position: absolute; width: 100px; height: 50px; background: #e0e0e0; cursor: move; left: 10px; top: {i*60}px;">{section_names[i]}</div>' for i in range(num_sections)])}
 </div>
 <script>
     const container = document.getElementById('layout-container');
     const draggables = document.getElementsByClassName('draggable');
     let layoutData = [];
 
-    function updateLayout() {
+    function updateLayout() {{
         layoutData = [];
-        for (let i = 0; i < draggables.length; i++) {
+        for (let i = 0; i < draggables.length; i++) {{
             const rect = draggables[i].getBoundingClientRect();
-            layoutData.push({
-                id: i,
+            layoutData.push({{
+                id: draggables[i].getAttribute('data-id'),
                 x: rect.left - container.getBoundingClientRect().left,
                 y: rect.top - container.getBoundingClientRect().top
-            });
-        }
-        window.parent.postMessage({type: 'layout_update', data: layoutData}, '*');
-    }
+            }});
+        }}
+        window.parent.postMessage({{type: 'layout_update', data: layoutData}}, '*');
+    }}
 
-    for (let i = 0; i < draggables.length; i++) {
+    for (let i = 0; i < draggables.length; i++) {{
         draggables[i].addEventListener('mousedown', startDragging);
-    }
+    }}
 
-    function startDragging(e) {
+    function startDragging(e) {{
         const draggable = e.target;
         let shiftX = e.clientX - draggable.getBoundingClientRect().left;
         let shiftY = e.clientY - draggable.getBoundingClientRect().top;
 
-        function moveAt(pageX, pageY) {
+        function moveAt(pageX, pageY) {{
             draggable.style.left = pageX - shiftX - container.getBoundingClientRect().left + 'px';
             draggable.style.top = pageY - shiftY - container.getBoundingClientRect().top + 'px';
-        }
+        }}
 
-        function onMouseMove(e) {
+        function onMouseMove(e) {{
             moveAt(e.pageX, e.pageY);
-        }
+        }}
 
         document.addEventListener('mousemove', onMouseMove);
 
-        document.onmouseup = function() {
+        document.onmouseup = function() {{
             document.removeEventListener('mousemove', onMouseMove);
             document.onmouseup = null;
             updateLayout();
-        };
-    }
+        }};
+    }}
 
     document.addEventListener('dragstart', (e) => e.preventDefault());
 </script>
 """
-layout_component = components.html(layout_html, height=320, scrolling=True)
-layout_data = st.session_state.get("layout_data", [])
+components.html(layout_html, height=320, scrolling=True)
+if st.button("Save Layout"):
+    # Placeholder: Ideally, this would capture layout_data from JS, but requires additional bridging
+    st.session_state["layout_data"] = [{"id": i, "x": 10, "y": i*60} for i in range(num_sections)]
+layout_data = st.session_state.get("layout_data", [{"id": i, "x": 10, "y": i*60} for i in range(num_sections)])
 
-# Section names input (with session state for example use cases)
-section_names = st.session_state.get("section_names", [f"Section{i+1}" for i in range(num_sections)])
+# Section names input - Fixed to avoid IndexError
+if "section_names" not in st.session_state or len(st.session_state["section_names"]) != num_sections:
+    st.session_state["section_names"] = [f"Section{i+1}" for i in range(num_sections)]
+section_names = st.session_state["section_names"]
 for i in range(num_sections):
     section_names[i] = st.text_input(f"Name of Section {i+1}", value=section_names[i], key=f"section_{i}")
-st.session_state["section_names"] = section_names[:num_sections]
+st.session_state["section_names"] = section_names
 
 # Generate button
 if st.button("Generate"):
@@ -262,7 +260,7 @@ st.sidebar.write("""
 2. Select your preferred programming language
 3. Choose frameworks from the categories
 4. Optionally apply an example use case
-5. Drag sections in the layout designer
+5. Drag sections in the layout designer and save
 6. Name your sections
 7. Click 'Generate' to create your boilerplate code
 """)
