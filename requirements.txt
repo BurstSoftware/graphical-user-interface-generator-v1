@@ -1,0 +1,10 @@
+# requirements.txt
+
+# Core dependencies for the application
+streamlit==1.32.0
+requests==2.31.0
+
+# Additional dependencies recommended for Streamlit Cloud
+python-dotenv==1.0.1  # For managing environment variables (like API keys)
+pillow==10.3.0       # For image processing (if you add image features later)
+numpy==1.26.4        # Common dependency for many Streamlit apps
